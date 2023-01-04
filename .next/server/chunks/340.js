@@ -37,6 +37,24 @@ const getUserByQuery = async (query)=>{
     }
     return result;
 };
+const createNotify = async ({ name , message , type  })=>{
+    let result;
+    try {
+        //const hash = await bcrypt.hash(password, saltRounds)
+        const db = client.db(process.env.MONGODB_DATABASE);
+        const collection = db.collection(process.env.MONGODB_COLLECTION1);
+        //const newUser = { email, password: hash }
+        const newNotify = {
+            name,
+            message,
+            type
+        };
+        result = await collection.insertOne(newNotify);
+    } catch (e) {
+        console.log("error on creating newNotify", e);
+    }
+    return result;
+};
 const createUser = async ({ email , password  })=>{
     let result;
     try {
@@ -74,7 +92,8 @@ const mongoHelper = {
     disconnectDb,
     getUserByQuery,
     createUser,
-    updateUserByEmail
+    updateUserByEmail,
+    createNotify
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mongoHelper);
 

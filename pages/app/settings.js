@@ -25,10 +25,28 @@ const Settings = () => {
     e.preventDefault()
     setIsLoading(true)
 
-    console.log({ name, message})
-    //const response = await signIn('credentials', { redirect: false, username, password })
-
-    //console.log(response, "<-----")
+    const type = "Mail";
+    
+    const options = {
+      method: 'POST',
+      body: JSON.stringify({ name, message, type }),
+      headers: {
+          'Content-Type': 'application/json'
+      }
+    }
+    fetch('/api/auth/notify', options)
+      .then(async res => {
+        if (res.status === 409) {
+          console.log('ERR', res)
+          setError('A notify already exists.')
+        } else {
+          const result = await res.json()
+          const response = await signIn('credentials', { redirect: false, name: name, message })
+          console.log(response)
+        }
+      })
+      .catch(e => setError('Unexpected Error'))
+      
 
     setIsLoading(false)
 
